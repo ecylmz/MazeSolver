@@ -1,5 +1,6 @@
 require_relative "node.rb"
 
+# emreye sorulacak :D
 def adj(curr, goal, open, close, map)
   temp = Array.new
   deltas = [[-1, -1, -1, 0, 0, 1, 1, 1], [-1, 0, 1, -1, 1, -1, 0, 1]]
@@ -35,6 +36,7 @@ def adj(curr, goal, open, close, map)
   return open
 end
 
+# verilen x ve y boyutlarına göre rasgele bir labirent oluşturulması
 def build_map(x_dim = 10, y_dim = 10)
   map = Array.new
 
@@ -53,6 +55,7 @@ def build_map(x_dim = 10, y_dim = 10)
   return map
 end
 
+# planlanmış bir labirentin oluşturulması
 def build_planned_map(plan)
   map = Array.new
 
@@ -61,7 +64,7 @@ def build_planned_map(plan)
     map << Array.new
 
     plan[y].length.times do |x|
-      if plan[y][x] == "O"
+      if plan[y][x] == "|"
         map[y] << Node.new(x, y, -1)
       else plan[y][x] == "."
         map[y] << Node.new(x, y, 10)
@@ -72,6 +75,8 @@ def build_planned_map(plan)
   return map
 end
 
+# labirentin görsel şekile aktarılması
+# x: Yol, S: Başlangıç, G: Hedef, |: Duvar
 def print_map(map, start, goal, path = Array.new)
   out = ""
 
@@ -87,7 +92,7 @@ def print_map(map, start, goal, path = Array.new)
         if cell.g_cost >= 0
           out << ". "
         else
-          out << "O "
+          out << "| "
         end
       end
     end
@@ -96,6 +101,7 @@ def print_map(map, start, goal, path = Array.new)
   return out
 end
 
+# doğru yolda mıyım? kontrolünü yapan fonksiyon
 def in_path?(path, cell)
   path.each do |node|
     if cell.g_x == node.g_x and cell.g_y == node.g_y
@@ -105,6 +111,7 @@ def in_path?(path, cell)
   return false
 end
 
+# yol bulma fonksiyonunun hesaplanması
 def find_path(start, goal, map)
   open = Array.new
   close = Array.new
@@ -126,7 +133,7 @@ def find_path(start, goal, map)
     close << open[lowest_index]
     open.delete_at(lowest_index)
 
-    # puts curr
+     # puts curr
   end
 
   out = Array.new
@@ -141,6 +148,7 @@ def find_path(start, goal, map)
   return out
 end
 
+# örnek plan
 plan = [
   [".", "O", ".", ".", ".", ".", ".", ".", ".", "."],
   [".", "O", ".", ".", ".", ".", ".", ".", ".", "."],
@@ -154,12 +162,16 @@ plan = [
   [".", "O", ".", ".", ".", ".", ".", "O", ".", "."]
 ]
 
+# rasgele labirentin inşa edilip map değişkenine atanması 
 map = build_map(15, 15)
+
+# planlı labirentin inşa edilip map değişkenine atanması
 # map = build_planned_map(plan)
 
+# yol bulma fonksiyonun path değişkenine atanması
 path = find_path(map[0][0], map[14][14], map)
 
-
+# birim zamandaki x in yer değişimi
 path.size.times do |i|
   # puts clean_screen
   puts "\e[H\e[2J"
