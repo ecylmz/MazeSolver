@@ -4,7 +4,13 @@ def adj(curr, goal, open, close, map)
   temp = Array.new
   deltas = [[-1, -1, -1, 0, 0, 1, 1, 1], [-1, 0, 1, -1, 1, -1, 0, 1]]
 
+  # olası düğümler hesaplanır ve temp dizisine atılır.
   0.upto(deltas[0].length - 1) do |i|
+    # olası düğüm yoksa yol yok demektir.
+    if curr == nil or curr.g_x == nil or curr.g_y == nil
+      p "Yol yok!!!"
+      exit
+    end
     adj_x = curr.g_x + deltas[0][i]
     adj_y = curr.g_y + deltas[1][i]
 
@@ -17,6 +23,7 @@ def adj(curr, goal, open, close, map)
     end
   end
 
+  # olası düğümlerden maliyeti en düşük olan seçilir ve onunla yola devam edilir.
   temp.each do |node|
     if node.g_parent != nil
       node_copy = Node.new(node.g_x, node.g_y, node.g_cost)
@@ -43,7 +50,7 @@ def build_map(x_dim = 10, y_dim = 10)
     map << Array.new
 
     x_dim.times do |x|
-      if (x == 0 and y == 0) or (x == x_dim - 1 and y == y_dim - 1) or rand > 0.2
+      if (x == 0 and y == 0) or (x == x_dim - 1 and y == y_dim - 1) or rand > 0.2 # çok duvar olması için bu değer 0-1 aralığında arttırılır.
         map[y] << Node.new(x, y, 10)
       else
         map[y] << Node.new(x, y, -1)
@@ -156,24 +163,24 @@ plan = [
   [".", "|", ".", ".", "|", "|", ".", "|", ".", "."],
   [".", "|", ".", ".", ".", "|", ".", "|", ".", "."],
   [".", "|", "|", "|", "|", "|", ".", "|", ".", "."],
+  [".", "|", ".", ".", ".", ".", ".", "|", ".", "|"],
   [".", ".", ".", ".", ".", ".", ".", "|", ".", "."],
-  [".", "|", ".", ".", ".", ".", ".", "|", ".", "."],
-  [".", "|", ".", ".", ".", ".", ".", "|", ".", "."]
+  [".", "|", ".", ".", ".", ".", ".", "|", "|", "."]
 ]
 
 # rasgele labirentin inşa edilip map değişkenine atanması 
-map = build_map(15, 15)
+# map = build_map(15, 15)
 
 # planlı labirentin inşa edilip map değişkenine atanması
-# map = build_planned_map(plan)
+map = build_planned_map(plan)
 
 # yol bulma fonksiyonun path değişkenine atanması
-path = find_path(map[0][0], map[14][14], map)
+path = find_path(map[0][0], map[9][9], map)
 
 # birim zamandaki x in yer değişimi
 path.size.times do |i|
   # puts clean_screen
   puts "\e[H\e[2J"
-  puts print_map(map, map[0][0], map[14][14], path[0..i])
+  puts print_map(map, map[0][0], map[9][9], path[0..i])
   sleep 0.5
 end
