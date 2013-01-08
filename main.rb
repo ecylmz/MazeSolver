@@ -1,6 +1,5 @@
 require_relative "node.rb"
 
-# emreye sorulacak :D
 def adj(curr, goal, open, close, map)
   temp = Array.new
   deltas = [[-1, -1, -1, 0, 0, 1, 1, 1], [-1, 0, 1, -1, 1, -1, 0, 1]]
